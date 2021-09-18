@@ -6,13 +6,12 @@ import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var todoAdapter: TodoAdapter
     private lateinit var recyclerView: RecyclerView
-    private lateinit var bt_Add: FloatingActionButton
+    private lateinit var bt_Add: Button
     private lateinit var bt_Delete: Button
     private lateinit var et_title: EditText
 
@@ -25,7 +24,7 @@ class MainActivity : AppCompatActivity() {
         recyclerView.adapter = todoAdapter
         recyclerView.layoutManager = layoutManager
         et_title = findViewById(R.id.editText_Todo)
-        bt_Add = findViewById(R.id.floatingactionbutton_add)
+        bt_Add = findViewById(R.id.button_Add)
         bt_Delete = findViewById(R.id.button_Delete)
         bt_Add.setOnClickListener {
             val title = et_title.text.toString()
@@ -34,9 +33,7 @@ class MainActivity : AppCompatActivity() {
                 todoAdapter.add(todo)
                 et_title.text.clear()
             }
-        bt_Delete.setOnClickListener {
-            todoAdapter.delete()
-        }
+
 
         }
     }
