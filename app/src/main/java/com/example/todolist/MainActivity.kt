@@ -33,8 +33,9 @@ class MainActivity : AppCompatActivity() {
                 todoAdapter.add(todo)
                 et_title.text.clear()
             }
-
-
+        }
+        bt_Delete.setOnClickListener {
+            todoAdapter.delete()
         }
     }
 }
