@@ -18,6 +18,17 @@ class LoginActicity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login_acticity)
         progressBar_login.visibility = View.INVISIBLE
+        val currentUser = LCUser.getCurrentUser()
+        if (currentUser != null) {
+            // 跳到首页
+            startActivity(Intent(this@LoginActicity, MainActivity::class.java))
+            finish()
+        } else {
+            initOnclick()
+        }
+    }
+
+    private fun initOnclick() {
         button_login.setOnClickListener {
             val username = editText_login_username.text.toString().trim()
             val password = editText_login_password.text.toString().trim()
