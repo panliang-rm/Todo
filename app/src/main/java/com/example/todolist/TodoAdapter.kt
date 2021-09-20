@@ -7,8 +7,9 @@ import android.view.ViewGroup
 import android.widget.CheckBox
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import cn.leancloud.LCObject
 
-class TodoAdapter(private val todos : MutableList<Todo>) :
+class TodoAdapter(private val todos : MutableList<LCObject>) :
     RecyclerView.Adapter<TodoAdapter.TodoViewHolder>() {
 
     class TodoViewHolder(itemview: View) : RecyclerView.ViewHolder(itemview) {
@@ -31,26 +32,28 @@ class TodoAdapter(private val todos : MutableList<Todo>) :
         else
             tv_title.paintFlags = tv_title.paintFlags and STRIKE_THRU_TEXT_FLAG.inv()
     }
-    fun add(todo : Todo) {
+    fun add(todo : LCObject) {
         todos.add(todo)
         notifyItemInserted(todos.size-1)
     }
 
-    fun delete() {
+   /* fun delete() {
         todos.removeAll { todo ->
             todo.isChecked
+            todo.get("isChecked")
         }
         notifyDataSetChanged()
-    }
+    }*/
     override fun onBindViewHolder(holder: TodoViewHolder, position: Int) {
         val curTodo = todos[position]
         holder.apply {
-            tv_title.text = curTodo.title
-            cd_DOne.isChecked = curTodo.isChecked
-            titleSpecialEffect(tv_title, curTodo.isChecked)
-            cd_DOne.setOnCheckedChangeListener {_, isChecked ->
-                titleSpecialEffect(tv_title, isChecked)
-                curTodo.isChecked = !curTodo.isChecked
+            var isChecked = curTodo.get("isChecked") as Boolean
+            tv_title.text = curTodo.get("title") as CharSequence?
+            cd_DOne.isChecked = isChecked
+            titleSpecialEffect(tv_title, curTodo.get("isChecked") as Boolean)
+            cd_DOne.setOnCheckedChangeListener {_, isChecke ->
+                titleSpecialEffect(tv_title, isChecke)
+                isChecked = !isChecked
             }
         }
     }

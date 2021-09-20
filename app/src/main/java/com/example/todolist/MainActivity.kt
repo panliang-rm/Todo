@@ -4,72 +4,82 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
-import android.view.MenuInflater
 import android.view.MenuItem
-import android.widget.Button
-import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import cn.leancloud.LCObject
+import cn.leancloud.LCQuery
 import cn.leancloud.LCUser
 import io.reactivex.Observer
-
 import io.reactivex.disposables.Disposable
-
-
+import kotlinx.android.synthetic.main.activity_main.*
+import java.util.*
 
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var todoAdapter: TodoAdapter
-    private lateinit var recyclerView: RecyclerView
-    private lateinit var bt_Add: Button
-    private lateinit var bt_Delete: Button
-    private lateinit var et_title: EditText
+    private val todos: MutableList<LCObject> = ArrayList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         val layoutManager = LinearLayoutManager(this)
-        todoAdapter = TodoAdapter(mutableListOf())
-        recyclerView = findViewById(R.id.rv_TodoList)
-        recyclerView.adapter = todoAdapter
-        recyclerView.layoutManager = layoutManager
-        et_title = findViewById(R.id.editText_Todo)
-        bt_Add = findViewById(R.id.button_Add)
-        bt_Delete = findViewById(R.id.button_Delete)
-        bt_Add.setOnClickListener {
-            val title = et_title.text.toString()
+        todoAdapter = TodoAdapter(todos)
+        rv_TodoList.adapter = todoAdapter
+        rv_TodoList.layoutManager = layoutManager
+        initOnClick()
+        initData()
+    }
+
+    private fun initData() {
+        val query = LCQuery<LCObject>("Todo")
+        query.whereEqualTo("user", LCUser.getCurrentUser())
+        query.findInBackground().subscribe(object : Observer<List<LCObject>?> {
+            override fun onSubscribe(disposable: Disposable) {}
+            override fun onError(throwable: Throwable) {}
+            override fun onComplete() {}
+            override fun onNext(t: List<LCObject>) {
+                // Todo是一个user的所有Todo对象的列表
+                t.toMutableList().let { todos.addAll(it) }
+                todoAdapter.notifyDataSetChanged()
+            }
+        })
+    }
+
+    private fun initOnClick() {
+        button_Add.setOnClickListener {
+            val title = editText_Todo.text.toString()
             if (title.isNotEmpty()) {
                 // 构建对象
                 val todo = LCObject("Todo")
                 // 为属性赋值
                 todo.put("title", title)
                 todo.put("isChecked", false)
+                todo.put("user", LCUser.getCurrentUser())
                 // 将对象保存到云端
                 todo.saveInBackground().subscribe(object : Observer<LCObject?> {
                     override fun onSubscribe(d: Disposable) {
                     }
 
                     override fun onNext(t: LCObject) {
-                        todoAdapter.add(Todo(title))
+                        todoAdapter.add(t)
                     }
 
                     override fun onError(e: Throwable) {
                         Log.e(this@MainActivity.toString(), e.toString())
-                        Toast.makeText(this@MainActivity, "${e.toString()}", Toast.LENGTH_SHORT)
+                        Toast.makeText(this@MainActivity, e.toString(), Toast.LENGTH_SHORT)
                     }
 
                     override fun onComplete() {
                     }
                 })
-                et_title.text.clear()
+                editText_Todo.text.clear()
             }
         }
-        bt_Delete.setOnClickListener {
-            todoAdapter.delete()
+        button_Delete.setOnClickListener {
+            //todoAdapter.delete()
         }
     }
 
@@ -91,3 +101,5 @@ class MainActivity : AppCompatActivity() {
     }
 
 }
+
+
