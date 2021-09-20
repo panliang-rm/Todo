@@ -84,6 +84,10 @@ class MainActivity : AppCompatActivity() {
             startActivity(Intent(this, LoginActicity::class.java))
             finish()
         }
+        if (item.itemId == android.R.id.home) {
+            onBackPressed()
+        }
         return super.onOptionsItemSelected(item)
     }
+
 }
