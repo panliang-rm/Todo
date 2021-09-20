@@ -29,6 +29,7 @@ class MainActivity : AppCompatActivity() {
         todoAdapter = TodoAdapter(todos)
         rv_TodoList.adapter = todoAdapter
         rv_TodoList.layoutManager = layoutManager
+
         initOnClick()
         initData()
     }
@@ -79,7 +80,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
         button_Delete.setOnClickListener {
-            //todoAdapter.delete()
+            todoAdapter.delete()
         }
     }
 
