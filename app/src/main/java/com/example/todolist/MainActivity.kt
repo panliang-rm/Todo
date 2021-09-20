@@ -1,7 +1,11 @@
 package com.example.todolist
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
@@ -9,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import cn.leancloud.LCObject
+import cn.leancloud.LCUser
 import io.reactivex.Observer
 
 import io.reactivex.disposables.Disposable
@@ -47,13 +52,16 @@ class MainActivity : AppCompatActivity() {
                 todo.saveInBackground().subscribe(object : Observer<LCObject?> {
                     override fun onSubscribe(d: Disposable) {
                     }
+
                     override fun onNext(t: LCObject) {
                         todoAdapter.add(Todo(title))
                     }
+
                     override fun onError(e: Throwable) {
                         Log.e(this@MainActivity.toString(), e.toString())
                         Toast.makeText(this@MainActivity, "${e.toString()}", Toast.LENGTH_SHORT)
                     }
+
                     override fun onComplete() {
                     }
                 })
@@ -63,5 +71,19 @@ class MainActivity : AppCompatActivity() {
         bt_Delete.setOnClickListener {
             todoAdapter.delete()
         }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.main, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == R.id.main_signout) {
+            LCUser.logOut()
+            startActivity(Intent(this, LoginActicity::class.java))
+            finish()
+        }
+        return super.onOptionsItemSelected(item)
     }
 }
