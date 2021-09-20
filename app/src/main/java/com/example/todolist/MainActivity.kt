@@ -3,9 +3,17 @@ package com.example.todolist
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import cn.leancloud.LCObject
+import io.reactivex.Observer
+
+import io.reactivex.disposables.Disposable
+
+
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -29,8 +37,24 @@ class MainActivity : AppCompatActivity() {
         bt_Add.setOnClickListener {
             val title = et_title.text.toString()
             if (title.isNotEmpty()) {
-                val todo = Todo(title)
-                todoAdapter.add(todo)
+                // 构建对象
+                val todo = LCObject("Todo")
+                // 为属性赋值
+                todo.put("title", title)
+                todo.put("isChecked", false)
+                // 将对象保存到云端
+                todo.saveInBackground().subscribe(object : Observer<LCObject?> {
+                    override fun onSubscribe(d: Disposable) {
+                    }
+                    override fun onNext(t: LCObject) {
+                        todoAdapter.add(Todo(title))
+                    }
+                    override fun onError(e: Throwable) {
+                       Toast.makeText(this@MainActivity, "${e.toString()}", Toast.LENGTH_SHORT)
+                    }
+                    override fun onComplete() {
+                    }
+                })
                 et_title.text.clear()
             }
         }
