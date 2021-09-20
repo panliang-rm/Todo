@@ -1,6 +1,7 @@
 package com.example.todolist
 
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
@@ -50,7 +51,8 @@ class MainActivity : AppCompatActivity() {
                         todoAdapter.add(Todo(title))
                     }
                     override fun onError(e: Throwable) {
-                       Toast.makeText(this@MainActivity, "${e.toString()}", Toast.LENGTH_SHORT)
+                        Log.e(this@MainActivity.toString(), e.toString())
+                        Toast.makeText(this@MainActivity, "${e.toString()}", Toast.LENGTH_SHORT)
                     }
                     override fun onComplete() {
                     }
