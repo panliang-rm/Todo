@@ -25,10 +25,12 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        val layoutManager = LinearLayoutManager(this)
+        val layout = LinearLayoutManager(this)
+        layout.stackFromEnd = true //列表再底部开始展示，反转后由上面开始展示
+        layout.reverseLayout = true //列表翻转
         todoAdapter = TodoAdapter(todos)
         rv_TodoList.adapter = todoAdapter
-        rv_TodoList.layoutManager = layoutManager
+        rv_TodoList.layoutManager = layout
 
         initOnClick()
         initData()
