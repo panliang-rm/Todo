@@ -57,7 +57,7 @@ class TodoAdapter(private val todos: MutableList<Todo>) :
                 override fun onNext(todos: List<LCObject>) {
                     // 获取需要更新的todo
                     for (todo in todos) {
-                        // 更新属性值
+
                         if (todo.getBoolean("isChecked"))
                             todo.delete()
                     }

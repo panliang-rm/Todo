@@ -32,12 +32,16 @@ class MainActivity : AppCompatActivity() {
         todoAdapter = TodoAdapter(todos)
         rv_TodoList.adapter = todoAdapter
         rv_TodoList.layoutManager = layout
-
         initOnClick()
         initData()
+        mainactivity_swiperfresh.setOnRefreshListener {
+            mainactivity_swiperfresh.isRefreshing = true
+            initData()
+        }
     }
 
     private fun initData() {
+        todos.clear()
         val query = LCQuery<LCObject>("Todo")
         query.whereEqualTo("user", LCUser.getCurrentUser())
         query.findInBackground().subscribe(object : Observer<List<LCObject>?> {
@@ -51,6 +55,7 @@ class MainActivity : AppCompatActivity() {
                     todos.add(_todo)
                 }
                 todoAdapter.notifyDataSetChanged()
+                mainactivity_swiperfresh.isRefreshing = false
             }
         })
     }
