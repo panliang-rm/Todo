@@ -10,14 +10,15 @@
         android:id="@+id/editText_login_username"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:hint="用户名"
+        android:hint="@string/Username"
         android:inputType="textPersonName"
         android:layout_marginTop="36dp"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:autofillHints="" />
 
     <EditText
         android:id="@+id/editText_login_password"
@@ -27,10 +28,11 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="36dp"
         android:layout_marginEnd="8dp"
-        android:hint="密码"
+        android:hint="@string/Password"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editText_login_username" />
+        app:layout_constraintTop_toBottomOf="@+id/editText_login_username"
+        android:autofillHints="" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline2"
@@ -46,7 +48,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginTop="92dp"
-        android:text="注册"
+        android:text="@string/Register"
         app:layout_constraintEnd_toStartOf="@+id/guideline2"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editText_login_password" />
@@ -58,7 +60,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="91dp"
         android:layout_marginEnd="16dp"
-        android:text="登陆"
+        android:text="@string/Login"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/guideline2"
         app:layout_constraintTop_toBottomOf="@+id/editText_login_password" />

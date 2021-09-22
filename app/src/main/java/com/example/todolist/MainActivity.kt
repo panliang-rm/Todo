@@ -1,11 +1,10 @@
 package com.example.todolist
 
+import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import cn.leancloud.LCObject
@@ -14,11 +13,10 @@ import cn.leancloud.LCUser
 import io.reactivex.Observer
 import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.recycleview_todo.*
 import java.util.*
 
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), DialogCloseListener{
 
     private lateinit var todoAdapter: TodoAdapter
     private val todos: MutableList<Todo> = ArrayList()
@@ -40,6 +38,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    //从服务端获取数据
     private fun initData() {
         todos.clear()
         val query = LCQuery<LCObject>("Todo")
@@ -49,11 +48,13 @@ class MainActivity : AppCompatActivity() {
             override fun onError(throwable: Throwable) {}
             override fun onComplete() {}
             override fun onNext(t: List<LCObject>) {
-                // Todo是一个user的所有Todo对象的列表
+                // 服务端获取到的是此用户的所有Todo，即List<LCObject>
+                // 本地需要的是List<Todo>，所以需要转换
                 for (_t in t) {
-                    val _todo = Todo(_t.getString("title"), _t.getBoolean("isChecked"), _t.objectId)
-                    todos.add(_todo)
+                    val todo = Todo(_t.getString("title"), _t.getBoolean("isChecked"), _t.objectId)
+                    todos.add(todo)
                 }
+                //更新列表
                 todoAdapter.notifyDataSetChanged()
                 mainactivity_swiperfresh.isRefreshing = false
             }
@@ -61,57 +62,36 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initOnClick() {
-        button_Add.setOnClickListener {
-            val title = editText_Todo.text.toString()
-            if (title.isNotEmpty()) {
-                // 构建对象
-                val todo = LCObject("Todo")
-                // 为属性赋值
-                todo.put("title", title)
-                todo.put("isChecked", false)
-                todo.put("user", LCUser.getCurrentUser())
-                // 将对象保存到云端
-                todo.saveInBackground().subscribe(object : Observer<LCObject?> {
-                    override fun onSubscribe(d: Disposable) {
-                    }
-
-                    override fun onNext(t: LCObject) {
-                        val _todo = Todo(t.getString("title"), t.getBoolean("isChecked"), t.objectId)
-                        todoAdapter.add(_todo)
-                    }
-
-                    override fun onError(e: Throwable) {
-                        Log.e(this@MainActivity.toString(), e.toString())
-                        Toast.makeText(this@MainActivity, e.toString(), Toast.LENGTH_SHORT)
-                    }
-
-                    override fun onComplete() {
-                    }
-                })
-                editText_Todo.text.clear()
-            }
-        }
-        button_Delete.setOnClickListener {
-            todoAdapter.delete()
+        main_floatingactionbutton.setOnClickListener {
+            AddNewTask.newInstance().show(supportFragmentManager, AddNewTask.TAG)
         }
 
     }
 
+    //创建主页右上角功能栏
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.main, menu)
         return super.onCreateOptionsMenu(menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        //主页右上角退出到登陆页面
         if (item.itemId == R.id.main_signout) {
             LCUser.logOut()
             startActivity(Intent(this, LoginActicity::class.java))
             finish()
         }
+        //返回按钮退出桌面处理
         if (item.itemId == android.R.id.home) {
             onBackPressed()
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    //回调函数，当save Todo时执行
+    override fun handleDialogClose(dialog: DialogInterface?) {
+        //重新获取数据
+        initData()
     }
 
 }

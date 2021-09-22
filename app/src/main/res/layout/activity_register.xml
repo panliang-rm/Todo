@@ -14,23 +14,25 @@
         android:layout_marginTop="36dp"
         android:layout_marginEnd="8dp"
         android:inputType="textPersonName"
-        android:hint="用户名"
+        android:hint="@string/Username"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:autofillHints="" />
 
     <EditText
         android:id="@+id/editText_register_password"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:hint="密码"
+        android:hint="@string/Password"
         android:layout_marginStart="8dp"
         android:layout_marginTop="44dp"
         android:layout_marginEnd="8dp"
         android:inputType="textPassword"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editText_register_usename" />
+        app:layout_constraintTop_toBottomOf="@+id/editText_register_usename"
+        android:autofillHints="" />
 
     <Button
         android:id="@+id/button_register_"
@@ -39,7 +41,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="51dp"
         android:layout_marginEnd="16dp"
-        android:text="注册"
+        android:text="@string/Register"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editText_register_password" />

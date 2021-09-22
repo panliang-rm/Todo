@@ -20,7 +20,7 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:textSize="24sp"
-            android:layout_toRightOf="@id/checkBox_todo_done"
+            android:layout_toEndOf="@id/checkBox_todo_done"
              />
 
         <CheckBox
