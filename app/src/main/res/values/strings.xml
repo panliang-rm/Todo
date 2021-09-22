@@ -11,4 +11,8 @@
     <string name="AddTodo">Add Todo</string>
     <string name="Exit">退出</string>
     <string name="todo">Todo</string>
+    <string name="cancel">取消</string>
+    <string name="ok">确定</string>
+    <string name="dialog_message">想要退出吗</string>
+    <string name="dialog_title">Hello</string>
 </resources>

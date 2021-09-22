@@ -3,8 +3,8 @@ package com.example.todolist
 import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
-import android.view.Menu
 import android.view.MenuItem
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import cn.leancloud.LCObject
@@ -65,22 +65,33 @@ class MainActivity : AppCompatActivity(), DialogCloseListener{
         main_floatingactionbutton.setOnClickListener {
             AddNewTask.newInstance().show(supportFragmentManager, AddNewTask.TAG)
         }
+        //点击Todo显示dialog， 退出当前账号
+        textView_todo.setOnClickListener {
+            val builder: AlertDialog.Builder = this.let {
+                AlertDialog.Builder(it)
+            }
+            builder.setMessage(R.string.dialog_message)
+                    ?.setTitle(R.string.dialog_title)
+            builder.apply {
+                setPositiveButton(R.string.ok
+                ) { _, _ ->
+                    LCUser.logOut()
+                    startActivity(Intent(this@MainActivity, LoginActivity::class.java))
+                    finish()
+                }
+                setNegativeButton(R.string.cancel
+                ) { dialog, _ ->
+                    // User cancelled the dialog
+                    dialog.dismiss()
+                }
 
-    }
-
-    //创建主页右上角功能栏
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.main, menu)
-        return super.onCreateOptionsMenu(menu)
+            }
+            val alertDialog = builder.create()
+            alertDialog.show()
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        //主页右上角退出到登陆页面
-        if (item.itemId == R.id.main_signout) {
-            LCUser.logOut()
-            startActivity(Intent(this, LoginActivity::class.java))
-            finish()
-        }
         //返回按钮退出桌面处理
         if (item.itemId == android.R.id.home) {
             onBackPressed()
