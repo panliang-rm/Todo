@@ -25,7 +25,7 @@ class RegisterActivity : AppCompatActivity() {
             if (username.isNotEmpty() and password.isNotEmpty()) {
                 progressBar_register.visibility = View.VISIBLE
             // 创建实例
-            var user = LCUser()
+            val user = LCUser()
             // 等同于 user.put("username", "Tom")
             user.username = username
             user.password = password
@@ -36,7 +36,7 @@ class RegisterActivity : AppCompatActivity() {
                     // 注册失败（通常是因为用户名已被使用
                     progressBar_register.visibility = View.INVISIBLE
                     Log.e(this@RegisterActivity.toString(), e.toString())
-                    Toast.makeText(this@RegisterActivity, e.toString(), Toast.LENGTH_SHORT)
+                    Toast.makeText(this@RegisterActivity, e.toString(), Toast.LENGTH_SHORT).show()
                 }
                 override fun onNext(t: LCUser) {
                     // 注册成功
@@ -52,7 +52,7 @@ class RegisterActivity : AppCompatActivity() {
                         override fun onError(e: Throwable) {
                             // 登录失败（可能是密码错误）
                             Log.e(this@RegisterActivity.toString(), e.toString())
-                            Toast.makeText(this@RegisterActivity, e.toString(), Toast.LENGTH_SHORT)
+                            Toast.makeText(this@RegisterActivity, e.toString(), Toast.LENGTH_SHORT).show()
                         }
                     })
                 }

@@ -78,7 +78,7 @@ class MainActivity : AppCompatActivity(), DialogCloseListener{
         //主页右上角退出到登陆页面
         if (item.itemId == R.id.main_signout) {
             LCUser.logOut()
-            startActivity(Intent(this, LoginActicity::class.java))
+            startActivity(Intent(this, LoginActivity::class.java))
             finish()
         }
         //返回按钮退出桌面处理

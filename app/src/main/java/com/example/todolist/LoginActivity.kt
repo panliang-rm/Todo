@@ -13,7 +13,7 @@ import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.activity_login_acticity.*
 
 
-class LoginActicity : AppCompatActivity() {
+class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login_acticity)
@@ -21,7 +21,7 @@ class LoginActicity : AppCompatActivity() {
         val currentUser = LCUser.getCurrentUser()
         if (currentUser != null) {
             // 跳到首页
-            startActivity(Intent(this@LoginActicity, MainActivity::class.java))
+            startActivity(Intent(this@LoginActivity, MainActivity::class.java))
             finish()
         } else {
             initOnclick()
@@ -39,21 +39,21 @@ class LoginActicity : AppCompatActivity() {
                     override fun onSubscribe(d: Disposable) {}
 
                     override fun onNext(t: LCUser) {
-                        startActivity(Intent(this@LoginActicity, MainActivity::class.java))
+                        startActivity(Intent(this@LoginActivity, MainActivity::class.java))
                         finish()
                     }
 
                     override fun onError(e: Throwable) {
                         // 登录失败（可能是密码错误）
                         progressBar_login.visibility = View.INVISIBLE
-                        Log.e(this@LoginActicity.toString(), e.toString())
-                        Toast.makeText(this@LoginActicity, e.toString(), Toast.LENGTH_SHORT)
+                        Log.e(this@LoginActivity.toString(), e.toString())
+                        Toast.makeText(this@LoginActivity, e.toString(), Toast.LENGTH_SHORT).show()
                     }
                 })
             }
         }
         button_goregister.setOnClickListener {
-            startActivity(Intent(this@LoginActicity, RegisterActivity::class.java))
+            startActivity(Intent(this@LoginActivity, RegisterActivity::class.java))
         }
     }
 
