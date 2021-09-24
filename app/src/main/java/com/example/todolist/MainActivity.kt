@@ -3,9 +3,12 @@ package com.example.todolist
 import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import cn.leancloud.LCObject
 import cn.leancloud.LCQuery
@@ -27,14 +30,16 @@ class MainActivity : AppCompatActivity(), DialogCloseListener{
         val layout = LinearLayoutManager(this)
         layout.stackFromEnd = true //列表再底部开始展示，反转后由上面开始展示
         layout.reverseLayout = true //列表翻转
-        todoAdapter = TodoAdapter(todos)
+        initData()
+        todoAdapter = TodoAdapter(todos, this)
         rv_TodoList.adapter = todoAdapter
         rv_TodoList.layoutManager = layout
+        val itemTouchHelper = ItemTouchHelper(RecyclerItemTouchHelper(todoAdapter))
+        itemTouchHelper.attachToRecyclerView(rv_TodoList)
         initOnClick()
-        initData()
         mainactivity_swiperfresh.setOnRefreshListener {
-            mainactivity_swiperfresh.isRefreshing = true
             initData()
+            Log.e("TAG", todos.toString())
         }
     }
 
@@ -45,7 +50,10 @@ class MainActivity : AppCompatActivity(), DialogCloseListener{
         query.whereEqualTo("user", LCUser.getCurrentUser())
         query.findInBackground().subscribe(object : Observer<List<LCObject>?> {
             override fun onSubscribe(disposable: Disposable) {}
-            override fun onError(throwable: Throwable) {}
+            override fun onError(throwable: Throwable) {
+                Toast.makeText(this@MainActivity, throwable.toString(), Toast.LENGTH_SHORT).show()
+            }
+
             override fun onComplete() {}
             override fun onNext(t: List<LCObject>) {
                 // 服务端获取到的是此用户的所有Todo，即List<LCObject>
@@ -55,8 +63,8 @@ class MainActivity : AppCompatActivity(), DialogCloseListener{
                     todos.add(todo)
                 }
                 //更新列表
-                todoAdapter.notifyDataSetChanged()
                 mainactivity_swiperfresh.isRefreshing = false
+                todoAdapter.notifyDataSetChanged()
             }
         })
     }
